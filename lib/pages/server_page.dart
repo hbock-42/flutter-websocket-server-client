@@ -1,8 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
+import 'package:wifi/wifi.dart';
 
 class ServerPage extends StatefulWidget {
   @override
@@ -67,17 +67,20 @@ class _ServerPageState extends State<ServerPage> {
     );
   }
 
-  void startServer() {
+  void startServer() async {
     var handler = webSocketHandler((webSocket) {
       webSocket.stream.listen((message) {
+        print("message receivvvved:" + message);
         setState(() {
           receivedMessage = message;
         });
         webSocket.sink.add("echo $message");
       });
     });
+    String ip = await Wifi.ip;
     // shelf_io.serve(handler, 'localhost', 8080).then((server) {
-    shelf_io.serve(handler, InternetAddress.loopbackIPv4, 8080).then((server) {
+    // shelf_io.serve(handler, InternetAddress.loopbackIPv4, 8080).then((server) {
+    shelf_io.serve(handler, ip, 8080).then((server) {
       print('Serving at ws://${server.address.host}:${server.port}');
       setState(() {
         this.server = server;

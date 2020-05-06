@@ -56,7 +56,8 @@ class _ClientPageState extends State<ClientPage> {
       channel = IOWebSocketChannel.connect("ws://$host:${port.toString()}");
     });
     channel.stream.listen((message) {
-      channel.sink.add("received!");
+      print("received: " + message);
+      // channel.sink.add("received!");
       // channel.sink.close(status.goingAway);
     });
     setState(() {});
